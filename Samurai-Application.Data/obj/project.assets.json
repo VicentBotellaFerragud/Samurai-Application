@@ -737,6 +737,16 @@
             "rid": "win"
           }
         }
+      },
+      "Samurai-Application.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Samurai-Application.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Samurai-Application.Domain.dll": {}
+        }
       }
     }
   },
@@ -1902,11 +1912,17 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "Samurai-Application.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Samurai-Application.Domain/Samurai-Application.Domain.csproj",
+      "msbuildProject": "../Samurai-Application.Domain/Samurai-Application.Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.10"
+      "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.10",
+      "Samurai-Application.Domain >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1935,7 +1951,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\VicentBotellaFerragu\\Documents\\Projekte\\Eigene Projekte\\Samurai-Application\\Samurai-Application.Domain\\Samurai-Application.Domain.csproj": {
+              "projectPath": "C:\\Users\\VicentBotellaFerragu\\Documents\\Projekte\\Eigene Projekte\\Samurai-Application\\Samurai-Application.Domain\\Samurai-Application.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -5,7 +5,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Samurai_Application.UI</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Samurai-Application.Data\Samurai-Application.Data.csproj" />
+    <ProjectReference Include="..\Samurai-Application.Domain\Samurai-Application.Domain.csproj" />
+  </ItemGroup>
 
 </Project>
