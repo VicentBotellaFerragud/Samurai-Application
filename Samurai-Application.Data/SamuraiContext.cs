@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Samurai_Application.Domain;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,10 @@ namespace Samurai_Application.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = SamuraiApplicationData");  
+            optionsBuilder.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = SamuraiApplicationData")
+                .LogTo(Console.Write, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
+                .EnableSensitiveDataLogging(); 
+            
             base.OnConfiguring(optionsBuilder); 
         }
 
