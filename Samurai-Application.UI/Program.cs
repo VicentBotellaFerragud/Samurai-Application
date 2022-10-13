@@ -13,7 +13,8 @@ namespace Samurai_Application.UI
 {
     class Program
     {
-        private static SamuraiContext context = new SamuraiContext();  
+        private static SamuraiContext context = new SamuraiContext();
+        private static SamuraiContextNoTracking contextNT = new SamuraiContextNoTracking(); //Not used yet.
 
         private static void Main(string[] args)
         {
@@ -157,7 +158,7 @@ namespace Samurai_Application.UI
             disconectedBattles.ForEach(b =>
             {
                 b.StartDate = new DateTime(1570, 01, 01);
-                b.EndDate = new DateTime(1570, 01, 01);
+                b.EndDate = new DateTime(1572, 01, 01);
             });
 
             using (var context2 = new SamuraiContext())
