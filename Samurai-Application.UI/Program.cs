@@ -25,6 +25,8 @@ namespace Samurai_Application.UI
             //RetrieveAndUpdateSamurai();
             //RetrieveAndUpdateMultipleSamurais();
             //RetrieveAndDeleteSamurai(2);
+            //AddBattlesByName("Battle of Nagashino", "Battle of Anegawa");
+            QueryAndUpdateBattles_Disconnected();
             Console.Write("Press any key...");
             Console.ReadKey();
         }
@@ -120,6 +122,49 @@ namespace Samurai_Application.UI
             context.Samurais.Remove(samurai);
             context.SaveChanges();
             GetSamurais();
+        }
+
+        private static void AddBattlesByName(params string[] names)
+        {
+            foreach (var name in names)
+            {
+                context.Add(new Battle { Name = name });
+            }
+            context.SaveChanges();
+            GetBattles();
+        }
+
+        private static void GetBattles()
+        {
+            var battles = context.Battles.TagWith("ConsoleApp.Program.GetBattles method").ToList();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine($"Battles count is --> {battles.Count}");
+            foreach (var battle in battles)
+            {
+                Console.WriteLine(battle.Name);
+            }
+        }
+
+        private static void QueryAndUpdateBattles_Disconnected()
+        {
+            List<Battle> disconectedBattles;
+            using (var context1 = new SamuraiContext())
+            {
+                disconectedBattles = context.Battles.ToList();
+            } //Context1 is disposed.
+
+            disconectedBattles.ForEach(b =>
+            {
+                b.StartDate = new DateTime(1570, 01, 01);
+                b.EndDate = new DateTime(1570, 01, 01);
+            });
+
+            using (var context2 = new SamuraiContext())
+            {
+                context2.UpdateRange(disconectedBattles);
+                context2.SaveChanges();
+            }
         }
     }
 }
