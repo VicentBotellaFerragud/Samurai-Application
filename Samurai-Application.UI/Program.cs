@@ -1,4 +1,5 @@
-﻿using Samurai_Application.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Samurai_Application.Data;
 using Samurai_Application.Domain;
 using System;
 using System.Collections.Generic;
@@ -15,25 +16,25 @@ namespace Samurai_Application.UI
 
         private static void Main(string[] args)
         {
-            context.Database.EnsureCreated();
-            GetSamurais("Before adding Samurai");
-            AddSamurai();
-            GetSamurais("After adding Samurai");
+            AddSamurai("Julie", "Sampson");
+            GetSamurais();
             Console.Write("Press any key...");
             Console.ReadKey();
         }
 
-        private static void AddSamurai()
+        private static void AddSamurai(params string[] names)
         {
-            var newSamurai = new Samurai { Name = "ElJuli" };
-            context.Samurais.Add(newSamurai);
+            foreach (var name in names)
+            {
+                context.Add(new Samurai { Name = name });
+            }
             context.SaveChanges();
         }
 
-        private static void GetSamurais(string text)
+        private static void GetSamurais()
         {
-            var samurais = context.Samurais.ToList();
-            Console.WriteLine($"{text}: Samurai count is --> {samurais.Count}");
+            var samurais = context.Samurais.TagWith("ConsoleApp.Program.GetSamurais method").ToList();
+            Console.WriteLine($"Samurai count is --> {samurais.Count}");
             foreach (var samurai in samurais)
             {
                 Console.WriteLine(samurai.Name);
