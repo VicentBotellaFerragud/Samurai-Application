@@ -29,10 +29,10 @@ namespace Samurai_Application.Data
 
                 //Then makes the context use the BattleSamurai class instead of infering the join.
                 .UsingEntity<BattleSamurai>
-                (bs => bs.HasOne<Battle>().WithMany(), //We express the relationship between the new class and the two that it is joining.
+                (bs => bs.HasOne<Battle>().WithMany(), //And defines the relationship between the new class and the two that it's joining.
                 bs => bs.HasOne<Samurai>().WithMany())
 
-                //The table BattleSamurai (in the database) will have a new column with the BattleSamurai property "DateJoined".
+                //Finally creates a new column with the BattleSamurai property "DateJoined" in the database table "BattleSamurai".
                 .Property(bs => bs.DateJoined) 
                 .HasDefaultValueSql("getDate()");
         }
