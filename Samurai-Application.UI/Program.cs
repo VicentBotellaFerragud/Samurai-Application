@@ -34,7 +34,8 @@ namespace Samurai_Application.UI
             //AddQuoteToExistingSamuraiWhileTracked();
             //AddQuoteToExistingSamuraiNotTracked(9);
             //Simpler_AddQuoteToExistingSamuraiNotTracked(8);
-            EagerLoadSamuraiWithQuotes();
+            //EagerLoadSamuraiWithQuotes();
+            ProjectSamuraiWithQuotes();
             Console.Write("Press any key...");
             Console.ReadKey();
         }
@@ -259,6 +260,20 @@ namespace Samurai_Application.UI
              * var filterPrimaryEntityWithInclude = 
              *      context.Samurais.Where(s => s.Name.Contains("whatever")).Include(s => s.Quotes).FirstOrDefault();                                               
              */
+        }
+
+        private static void ProjectSamuraiWithQuotes()
+        {
+            var somePropsWithQuotes = context.Samurais.Select(s => new { s.Id, s.Name, numberOfQuotes = s.Quotes.Count}).ToList();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            foreach (var samuraiWithQuotes in somePropsWithQuotes)
+            {
+                Console.WriteLine(samuraiWithQuotes.Id);
+                Console.WriteLine(samuraiWithQuotes.Name);
+                Console.WriteLine(samuraiWithQuotes.numberOfQuotes);
+                Console.WriteLine("");
+            }
         }
     }
 }
