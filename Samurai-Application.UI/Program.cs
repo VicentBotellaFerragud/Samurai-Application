@@ -26,8 +26,14 @@ namespace Samurai_Application.UI
             //RetrieveAndUpdateSamurai();
             //RetrieveAndUpdateMultipleSamurais();
             //RetrieveAndDeleteSamurai(2);
+            //GetBattles();
             //AddBattlesByName("Battle of Nagashino", "Battle of Anegawa");
-            QueryAndUpdateBattles_Disconnected();
+            //QueryAndUpdateBattles_Disconnected();
+            //InsertNewSamuraiWithAQuote();
+            //InsertNewSamuraiWithManyQuotes();
+            //AddQuoteToExistingSamuraiWhileTracked();
+            //AddQuoteToExistingSamuraiNotTracked(9);
+            Simpler_AddQuoteToExistingSamuraiNotTracked(8);
             Console.Write("Press any key...");
             Console.ReadKey();
         }
@@ -166,6 +172,67 @@ namespace Samurai_Application.UI
                 context2.UpdateRange(disconectedBattles);
                 context2.SaveChanges();
             }
+        }
+
+        private static void InsertNewSamuraiWithAQuote()
+        {
+            var samurai = new Samurai
+            {
+                Name = "Vincent",
+                Quotes = new List<Quote>
+                {
+                    new Quote { Text = "I am the last samurai!" }
+                }
+            };
+            context.Samurais.Add(samurai);
+            context.SaveChanges();
+        }
+
+        private static void InsertNewSamuraiWithManyQuotes()
+        {
+            var samurai = new Samurai
+            {
+                Name = "Tamagochi",
+                Quotes = new List<Quote>
+                {
+                    new Quote { Text = "I could never be stronger than Vincent..." },
+                    new Quote { Text = "Vincent is the greatest samurai that ever walked this earth" }
+                }
+            };
+            context.Samurais.Add(samurai);
+            context.SaveChanges();
+        }
+
+        private static void AddQuoteToExistingSamuraiWhileTracked()
+        {
+            var samurai = context.Samurais.FirstOrDefault();
+            samurai.Quotes.Add(new Quote
+            {
+                Text = "We are nothing but dust in the wind"
+            });
+            context.SaveChanges();
+        }
+
+        private static void AddQuoteToExistingSamuraiNotTracked(int samuraiId)
+        {
+            var samurai = context.Samurais.Find(samuraiId);
+            samurai.Quotes.Add(new Quote
+            {
+                Text = "All hope is gone..."
+            });
+            using (var newContext = new SamuraiContext())
+            {
+                newContext.Samurais.Update(samurai);
+                newContext.SaveChanges();   
+            }    
+        }
+
+        private static void Simpler_AddQuoteToExistingSamuraiNotTracked(int samuraiId)
+        {
+            var quote = new Quote { Text = "I am really hungry", SamuraiId = samuraiId };
+            using var newContext = new SamuraiContext();
+            newContext.Quotes.Add(quote);
+            newContext.SaveChanges();
         }
     }
 }
