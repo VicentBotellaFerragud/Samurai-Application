@@ -35,7 +35,11 @@ namespace Samurai_Application.UI
             //AddQuoteToExistingSamuraiNotTracked(9);
             //Simpler_AddQuoteToExistingSamuraiNotTracked(8);
             //EagerLoadSamuraiWithQuotes();
-            ProjectSamuraiWithQuotes();
+            //ProjectSamuraiWithQuotes();
+            //ExplicitLoadQuotes();
+            //FilteringWithRelatedData
+            //ModifyingRelatedDataWhenTracked();
+            //ModifyingRelatedDataWhenNotTracked();
             Console.Write("Press any key...");
             Console.ReadKey();
         }
@@ -225,8 +229,8 @@ namespace Samurai_Application.UI
             using (var newContext = new SamuraiContext())
             {
                 newContext.Samurais.Update(samurai);
-                newContext.SaveChanges();   
-            }    
+                newContext.SaveChanges();
+            }
         }
 
         private static void Simpler_AddQuoteToExistingSamuraiNotTracked(int samuraiId)
@@ -264,7 +268,7 @@ namespace Samurai_Application.UI
 
         private static void ProjectSamuraiWithQuotes()
         {
-            var somePropsWithQuotes = context.Samurais.Select(s => new { s.Id, s.Name, numberOfQuotes = s.Quotes.Count}).ToList();
+            var somePropsWithQuotes = context.Samurais.Select(s => new { s.Id, s.Name, numberOfQuotes = s.Quotes.Count }).ToList();
             Console.WriteLine("");
             Console.WriteLine("");
             foreach (var samuraiWithQuotes in somePropsWithQuotes)
@@ -274,6 +278,65 @@ namespace Samurai_Application.UI
                 Console.WriteLine(samuraiWithQuotes.numberOfQuotes);
                 Console.WriteLine("");
             }
+        }
+
+        private static void ExplicitLoadQuotes()
+        {
+            //Makes sure that there is one horse in the database and clears the context's change tracker.
+            context.Set<Horse>().Add(new Horse { SamuraiId = 1, Name = "Silver Shadow" });
+            context.SaveChanges();
+            context.ChangeTracker.Clear();
+
+            var samurai = context.Samurais.Find(1);
+            context.Entry(samurai).Collection(s => s.Quotes).Load();
+            context.Entry(samurai).Reference(s => s.Horse).Load();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine(samurai.Name);
+            Console.WriteLine(samurai.Horse.Name);
+            foreach (var quote in samurai.Quotes)
+            {
+                Console.WriteLine(quote.Text);
+            }
+        }
+
+        private static void FilteringWithRelatedData()
+        {
+            var samurais = context.Samurais.Where(s => s.Quotes.Any(q => q.Text.Contains("hungry"))).ToList();
+            foreach (var samurai in samurais)
+            {
+                context.Entry(samurai).Collection(s => s.Quotes).Load();
+            }
+            Console.WriteLine("");
+            Console.WriteLine("");
+            foreach (var samurai in samurais)
+            {
+                Console.WriteLine(samurai.Name);
+                foreach (var quote in samurai.Quotes)
+                {
+                    Console.WriteLine(quote.Text);
+                }
+                Console.WriteLine("");
+            }
+        }
+
+        private static void ModifyingRelatedDataWhenTracked()
+        {
+            var samurai = context.Samurais.Include(s => s.Quotes).FirstOrDefault(s => s.Id == 10);
+            samurai.Quotes[0].Text += " (edited)";
+            context.SaveChanges();
+        }
+
+        private static void ModifyingRelatedDataWhenNotTracked()
+        {
+            var samurai = context.Samurais.Include(s => s.Quotes).FirstOrDefault(s => s.Id == 10);
+            var quote = samurai.Quotes[0];
+            quote.Text = "I am the first quote";
+
+            using var newContext = new SamuraiContext();
+            //newContext.Quotes.Update(quote); --> DO NOT USE THIS!!! IT UPDATES ALL QUOTES.
+            newContext.Entry(quote).State = EntityState.Modified;
+            newContext.SaveChanges();
         }
     }
 }
