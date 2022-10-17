@@ -18,7 +18,7 @@ namespace Samurai_Application.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = SamuraiApplicationData")
-                .LogTo(Console.Write, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
+                .LogTo(Console.Write, new[] { DbLoggerCategory.Database.Command.Name, DbLoggerCategory.Database.Transaction.Name }, LogLevel.Debug)
                 .EnableSensitiveDataLogging(); 
             
             base.OnConfiguring(optionsBuilder); 
@@ -26,6 +26,9 @@ namespace Samurai_Application.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            /* TEMPORARILY REMOVED
+
             //First identifies the relationship directly between Samurai and Battle.
             modelBuilder.Entity<Samurai>()
                 .HasMany(s => s.Battles)
@@ -39,6 +42,9 @@ namespace Samurai_Application.Data
                 //Finally creates a new column with the BattleSamurai property "DateJoined" in the database table "BattleSamurai".
                 .Property(bs => bs.DateJoined) 
                 .HasDefaultValueSql("getDate()");
+
+            */
+
         }
     }
 }

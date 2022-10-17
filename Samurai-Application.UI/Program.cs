@@ -40,6 +40,10 @@ namespace Samurai_Application.UI
             //FilteringWithRelatedData
             //ModifyingRelatedDataWhenTracked();
             //ModifyingRelatedDataWhenNotTracked();
+            //AddingNewSamuraiToAnExistingBattle();
+            //ReturnBattleWithSamurais();
+            //ReturnAllBattlesWithSamurais();
+            AddAllSamuraisToAllBattles();
             Console.Write("Press any key...");
             Console.ReadKey();
         }
@@ -337,6 +341,79 @@ namespace Samurai_Application.UI
             //newContext.Quotes.Update(quote); --> DO NOT USE THIS!!! IT UPDATES ALL QUOTES.
             newContext.Entry(quote).State = EntityState.Modified;
             newContext.SaveChanges();
+        }
+
+        private static void AddingNewSamuraiToAnExistingBattle()
+        {
+            var battle = context.Battles.Include(b => b.Samurais).FirstOrDefault();
+            battle.Samurais.Add(new Samurai { Name = "Novita Novi" });
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine(battle.Name);
+            Console.WriteLine(battle.Samurais.Count);
+            Console.WriteLine("");
+            context.SaveChanges();  
+        }
+
+        private static void ReturnBattleWithSamurais()
+        {
+            var battle = context.Battles.Include(b => b.Samurais).FirstOrDefault();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine(battle.Name);
+            foreach (var samurai in battle.Samurais)
+            {
+                Console.WriteLine(samurai.Name);
+                Console.WriteLine("");
+            }
+        }
+
+        private static void ReturnAllBattlesWithSamurais()
+        {
+            var battles = context.Battles.Include(b => b.Samurais).ToList();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            foreach (var battle in battles)
+            {
+                Console.WriteLine("Battle name: ");
+                Console.WriteLine(battle.Name);
+                Console.WriteLine("");
+                foreach (var samurai in battle.Samurais)
+                {
+                    Console.WriteLine(samurai.Name);
+                }
+                Console.WriteLine("");
+                Console.WriteLine("");
+            }
+        }
+
+        private static void AddAllSamuraisToAllBattles()
+        {
+            var samurais = context.Samurais.ToList();
+            var battles = context.Battles.Include(b => b.Samurais).ToList();    
+            foreach (var battle in battles)
+            {
+                battle.Samurais.AddRange(samurais);
+            }
+            context.SaveChanges();
+            ReturnAllBattlesWithSamurais();
+        }
+
+        private static void RemoveAllSamuraisFromAllBattles()
+        {
+            var samurais = context.Samurais.ToList();
+            var battles = context.Battles.Include(b => b.Samurais).ToList();
+            foreach (var battle in battles)
+            {
+                var samuraisCount = battle.Samurais.Count;
+                for (int i = 0; i < samuraisCount; i++)
+                {
+                    var samurai = battle.Samurais[0];
+                    battle.Samurais.Remove(samurai);
+                }
+            }
+            context.SaveChanges();
+            ReturnAllBattlesWithSamurais();
         }
     }
 }
