@@ -52,6 +52,8 @@ namespace Samurai_Application.UI
             //AddNewHorseToSamuraiObject(4);
             //AddNewHorseToDisconnectedSamuraiObject(7);
             //ReplaceAHorse(1);
+            //GetSamuraisWithHorses();
+            GetHorsesWithSamurais();
             Console.Write("Press any key...");
             Console.ReadKey();
         }
@@ -552,6 +554,24 @@ namespace Samurai_Application.UI
                 }
                 Console.WriteLine("");
             }
+        }
+
+        private static void GetSamuraisWithHorses()
+        {
+            var samuraisWithHorses = context.Samurais.Include(s => s.Horse).ToList();
+        }
+
+        private static void GetHorsesWithSamurais()
+        {
+            var horseOnly = context.Set<Horse>().Find(4);
+
+            var horseWithSamurai = context.Samurais.Include(s => s.Horse).FirstOrDefault(s => s.Horse.SamuraiId == 3);
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine(horseWithSamurai.Id);
+            Console.WriteLine(horseWithSamurai.Name);
+            Console.WriteLine(horseWithSamurai.Horse.Name);
+            Console.WriteLine("");
         }
     }
 }

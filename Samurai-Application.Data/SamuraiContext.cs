@@ -39,6 +39,8 @@ namespace Samurai_Application.Data
                 //Finally creates a new column with the BattleSamurai property "DateJoined" in the database table "BattleSamurai".
                 .Property(bs => bs.DateJoined) 
                 .HasDefaultValueSql("getDate()");
+
+            modelBuilder.Entity<Horse>().ToTable("Horses"); 
         }
     }
 }
