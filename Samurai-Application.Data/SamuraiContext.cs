@@ -26,9 +26,6 @@ namespace Samurai_Application.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            /* TEMPORARILY REMOVED
-
             //First identifies the relationship directly between Samurai and Battle.
             modelBuilder.Entity<Samurai>()
                 .HasMany(s => s.Battles)
@@ -42,9 +39,6 @@ namespace Samurai_Application.Data
                 //Finally creates a new column with the BattleSamurai property "DateJoined" in the database table "BattleSamurai".
                 .Property(bs => bs.DateJoined) 
                 .HasDefaultValueSql("getDate()");
-
-            */
-
         }
     }
 }

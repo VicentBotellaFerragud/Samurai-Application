@@ -43,7 +43,11 @@ namespace Samurai_Application.UI
             //AddingNewSamuraiToAnExistingBattle();
             //ReturnBattleWithSamurais();
             //ReturnAllBattlesWithSamurais();
-            AddAllSamuraisToAllBattles();
+            //AddAllSamuraisToAllBattles();
+            //RemoveAllSamuraisFromAllBattles();
+            //RemoveSamuraiFromABattle();
+            //RemoveSamuraiFromABattleExplicit();
+            EditDateJoinedFromABattleSamuraiExplicit();
             Console.Write("Press any key...");
             Console.ReadKey();
         }
@@ -414,6 +418,35 @@ namespace Samurai_Application.UI
             }
             context.SaveChanges();
             ReturnAllBattlesWithSamurais();
+        }
+
+        private static void RemoveSamuraiFromABattle()
+        {
+            var battle = context.Battles.Include(b => b.Samurais).Single(b => b.BattleId == 1);
+            var samurai = context.Samurais.Single(s => s.Id == 1);
+            battle.Samurais.Remove(samurai);
+            context.SaveChanges();
+            ReturnAllBattlesWithSamurais();
+        }
+
+        private static void RemoveSamuraiFromABattleExplicit()
+        {
+            var b_s = context.Set<BattleSamurai>().SingleOrDefault(bs => bs.BattleId == 1 && bs.SamuraiId == 1);
+            if (b_s != null)
+            {
+                context.Remove(b_s);
+                context.SaveChanges();
+            }
+        }
+
+        private static void EditDateJoinedFromABattleSamuraiExplicit()
+        {
+            var b_s = context.Set<BattleSamurai>().SingleOrDefault(bs => bs.BattleId == 1 && bs.SamuraiId == 1);
+            if (b_s != null)
+            {
+                b_s.DateJoined = DateTime.Now;
+                context.SaveChanges();
+            }
         }
     }
 }
