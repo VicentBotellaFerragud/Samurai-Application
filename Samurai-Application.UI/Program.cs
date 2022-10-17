@@ -47,7 +47,11 @@ namespace Samurai_Application.UI
             //RemoveAllSamuraisFromAllBattles();
             //RemoveSamuraiFromABattle();
             //RemoveSamuraiFromABattleExplicit();
-            EditDateJoinedFromABattleSamuraiExplicit();
+            //EditDateJoinedFromABattleSamuraiExplicit();
+            //AddNewHorseToSamuraiUsingId(3);
+            //AddNewHorseToSamuraiObject(4);
+            //AddNewHorseToDisconnectedSamuraiObject(7);
+            //ReplaceAHorse(1);
             Console.Write("Press any key...");
             Console.ReadKey();
         }
@@ -446,6 +450,107 @@ namespace Samurai_Application.UI
             {
                 b_s.DateJoined = DateTime.Now;
                 context.SaveChanges();
+            }
+        }
+
+        private static void AddNewHorseToSamuraiUsingId(int id)
+        {
+            var horse = new Horse { Name = "Bucéfalo2", SamuraiId = id };
+            context.Add(horse); //There is no horse DbSet, but EF knows how to add the new horse nonetheless.
+            context.SaveChanges();
+
+            var samuraisWithHorses = context.Samurais.Include(s => s.Horse).ToList();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            foreach (var samurai in samuraisWithHorses)
+            {
+                Console.WriteLine(samurai.Name);
+                if (samurai.Horse == null)
+                {
+                    Console.WriteLine("no horse yet");
+                } else
+                {
+                    Console.WriteLine(samurai.Horse.Name);
+                }
+                Console.WriteLine("");
+            }
+        }
+
+        private static void AddNewHorseToSamuraiObject(int id)
+        {
+            var passedInSamurai = context.Samurais.Find(id);   
+            var horse = new Horse { Name = "Almost Pegasus" };
+            passedInSamurai.Horse = horse;
+            context.SaveChanges();
+
+            var samuraisWithHorses = context.Samurais.Include(s => s.Horse).ToList();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            foreach (var samurai in samuraisWithHorses)
+            {
+                Console.WriteLine(samurai.Name);
+                if (samurai.Horse == null)
+                {
+                    Console.WriteLine("no horse yet");
+                }
+                else
+                {
+                    Console.WriteLine(samurai.Horse.Name);
+                }
+                Console.WriteLine("");
+            }
+        }
+
+        private static void AddNewHorseToDisconnectedSamuraiObject(int id)
+        {
+            var passedInSamurai = context.Samurais.Find(id);
+            var horse = new Horse { Name = "Avalanche" };
+            passedInSamurai.Horse = horse;
+
+            using var newContext = new SamuraiContext();
+            newContext.Samurais.Attach(passedInSamurai);
+            newContext.SaveChanges();
+
+            var samuraisWithHorses = context.Samurais.Include(s => s.Horse).ToList();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            foreach (var samurai in samuraisWithHorses)
+            {
+                Console.WriteLine(samurai.Name);
+                if (samurai.Horse == null)
+                {
+                    Console.WriteLine("no horse yet");
+                }
+                else
+                {
+                    Console.WriteLine(samurai.Horse.Name);
+                }
+                Console.WriteLine("");
+            }
+        }
+
+        private static void ReplaceAHorse(int id)
+        {
+            var passedInSamurai = context.Samurais.Include(s => s.Horse).FirstOrDefault(s => s.Id == id);
+            var horse = new Horse { Name = "NightLord" };
+            passedInSamurai.Horse = horse;
+            context.SaveChanges();
+
+            var samuraisWithHorses = context.Samurais.Include(s => s.Horse).ToList();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            foreach (var samurai in samuraisWithHorses)
+            {
+                Console.WriteLine(samurai.Name);
+                if (samurai.Horse == null)
+                {
+                    Console.WriteLine("no horse yet");
+                }
+                else
+                {
+                    Console.WriteLine(samurai.Horse.Name);
+                }
+                Console.WriteLine("");
             }
         }
     }
